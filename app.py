@@ -122,6 +122,22 @@ st.markdown("""
     .stFileUploader label {
         color: rgba(255, 255, 255, 0.8) !important;
     }
+
+    /* Streamlit's uploader hint text sometimes shows the default "Limit 200MB per file"
+       even when `server.maxUploadSize` is set lower. We override the visible string
+       so the UI matches the actual server-side limit. */
+    .stFileUploader small {
+        font-size: 0 !important; /* hide the built-in text without removing the element */
+    }
+
+    .stFileUploader small::after {
+        content: "Limit 20MB per file" !important;
+        font-size: 0.875rem !important;
+        color: rgba(255, 255, 255, 0.55) !important;
+        line-height: 1.3 !important;
+        display: inline-block;
+        margin-top: 0.1rem;
+    }
     
     /* Button styling */
     .stButton > button {
@@ -413,7 +429,6 @@ def render_pdf_comparison():
             key="pdf_old",
             help=f"Select the older version of the PDF document (Max size: {Config.MAX_FILE_SIZE_MB} MB)"
         )
-        st.caption(f"⚠️ Maximum file size: {Config.MAX_FILE_SIZE_MB} MB")
         if old_file and not validate_file_size(old_file):
             st.error(f"File too large. Max size: {Config.MAX_FILE_SIZE_MB} MB")
             old_file = None
@@ -430,7 +445,6 @@ def render_pdf_comparison():
             key="pdf_new",
             help=f"Select the newer version of the PDF document (Max size: {Config.MAX_FILE_SIZE_MB} MB)"
         )
-        st.caption(f"⚠️ Maximum file size: {Config.MAX_FILE_SIZE_MB} MB")
         if new_file and not validate_file_size(new_file):
             st.error(f"File too large. Max size: {Config.MAX_FILE_SIZE_MB} MB")
             new_file = None
@@ -2523,7 +2537,6 @@ def render_excel_csv_comparison():
             key="tabular_old",
             help=f"Select the older version of the {file_type.split()[0]} file (Max size: {Config.MAX_FILE_SIZE_MB} MB)"
         )
-        st.caption(f"⚠️ Maximum file size: {Config.MAX_FILE_SIZE_MB} MB")
         if old_file and not validate_file_size(old_file):
             st.error(f"File too large. Max size: {Config.MAX_FILE_SIZE_MB} MB")
             old_file = None
@@ -2540,7 +2553,6 @@ def render_excel_csv_comparison():
             key="tabular_new",
             help=f"Select the newer version of the {file_type.split()[0]} file (Max size: {Config.MAX_FILE_SIZE_MB} MB)"
         )
-        st.caption(f"⚠️ Maximum file size: {Config.MAX_FILE_SIZE_MB} MB")
         if new_file and not validate_file_size(new_file):
             st.error(f"File too large. Max size: {Config.MAX_FILE_SIZE_MB} MB")
             new_file = None
